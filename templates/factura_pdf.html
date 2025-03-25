@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura #{{ factura.id }}</title>
+    <link rel="stylesheet" href="normalize.css">
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            
+            align-items: center;
+            height: 100px;
+        }
+        .factura-info {
+            margin-top: 20px;
+            height: 200px;
+        }
+
+        .info-general {
+            text-align: right;
+            margin-top: 80px;
+            height: 200px;
+        }
+
+        a {
+            color: #248297;
+            text-decoration: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #248297;
+            color: white;
+        }
+
+        .parrafo-nota {
+            margin-top: 60px;
+            height: 200px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: gray;
+            text-align: center;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+        }
+
+        .logo {
+    width: 150px; /* Ajusta según necesites */
+    height: auto;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="logo" src="file:///{{ logo_path }}" width="150" height="auto" alt="Julie Tours & Travel">
+
+
+
+            <div class="info-general">
+                <p><strong>Julie Tours & Travel</strong></p>
+                <p><strong>Dirección:</strong> Calle Puerto Rico No 326</p>
+                <p>2do Nivel- Local 3</p>
+                <p>Alma Rosa II</p>
+                <p><strong>Teléfono Oficina:</strong><a href="https://wa.me/18093150333"> 809-315-0333</a></p>
+                <p><strong>Celular :</strong><a target="_blank" href="https://wa.me/18093190333"> 809-319-0333</a></p>
+                <p><strong>Celular :</strong><a href="https://wa.me/18097190333"> 809-719-0333</a></p>
+                <p><strong>Email:</strong>
+                    <a href="mailto:reservasjulietours@gmail.com">reservasjulietours@gmail.com</a>
+                </p>
+            </div>
+        </div>
+
+        <h1>Factura</h1>
+        <div class="factura-info">
+            <p><strong>Fecha:</strong> {{ factura.fecha.strftime('%d/%m/%Y') }}</p>
+            <p><strong>Número de Factura:</strong> JTT-{{ "%05d"|format(factura.id) }}</p>
+            <p><strong>Cliente:</strong> {{ factura.cliente }}</p>
+            <p><strong>Artículo:</strong> {{ factura.articulo }}</p>
+        </div>
+
+        <table>
+            <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Total</th>
+
+            </tr>
+            <tr>
+                <td>{{ factura.articulo }}</td>
+                <td><p><strong>Cantidad:</strong> {{factura.cantidad}}</p>
+                <td><p><strong>Precio:</strong> RD${{ "{:,.2f}".format(factura.precio) }}</p>
+                    <td><p><strong>Precio:</strong> RD${{ "{:,.2f}".format(factura.total) }}</p>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Balance</th>
+            </tr>
+
+            {% for abono in factura.abonos %}
+            <tr>
+                <td>{{ abono.fecha_abono.strftime('%d/%m/%Y') }}</td>
+                <td>RD${{ "{:,.2f}".format(abono.monto) }}</td>
+                <td>RD${{ "{:,.2f}".format(factura.saldo_pendiente) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No hay abonos registrados.</td>
+            </tr>
+            {% endfor %}
+        </table> 
+
+        <div class="parrafo-nota">
+            <p><strong>Notas:</strong> {{ factura.notas if factura.notas else 'Sin notas' }}</p>
+        </div>
+
+        <p class="footer">Gracias por confiar en Julie Tours & Travel</p>
+    </div>
+</body>
+</html>
+

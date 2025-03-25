@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura #{{ factura.id }}</title>
+    <style>
+        body {
+            background-color: #248297;
+            color: rgb(237, 231, 231);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }   
+        
+        p {
+            margin-bottom: 10px;
+            font-size: 35px;
+        }
+        h1 {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .container {
+            margin-top: 50px;
+            width: 50%;
+            height: 80%;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        input, textarea {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1bb3d6;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0f4c75;
+        }
+
+        .button {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1bb3d6;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            display: block; 
+            border: #f1f4f5;
+        }
+      
+        a {
+            text-decoration: none;
+            color: #f1f4f5;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Factura #JTT-{{ "%05d"|format(factura.id) }}</h2>
+<p><strong>Cliente:</strong> {{ factura.cliente }}</p>
+<p><strong>Total:</strong> RD${{ "{:,.2f}".format(factura.total) }}</p>
+<p><strong>Abonado:</strong> RD${{ "{:,.2f}".format(factura.total_abonado) }}</p>
+<p><strong>Pendiente:</strong> RD${{ "{:,.2f}".format(factura.saldo_pendiente) }}</p>
+
+<h3>Abonos realizados:</h3>
+<ul>
+    {% for abono in factura.abonos %}
+        <li>RD${{ "{:,.2f}".format(abono.monto) }} - {{ abono.fecha_abono.strftime('%d/%m/%Y') }}</li>
+    {% else %}
+        <li>No hay abonos registrados.</li>
+    {% endfor %}
+</ul>
+
+<h3>Registrar Abono</h3>
+<form action="{{ url_for('abonar', factura_id=factura.id) }}" method="post">
+    <input type="number" step="0.01" name="monto" placeholder="Monto" required>
+    <button type="submit">Abonar</button>
+</form>
+<a class="button" href="{{ url_for('generar_pdf',id=factura.id) }}" target="_blank">
+    📄 Descargar PDF
+</a>
+<br>
+
+</body>
+</html>
+

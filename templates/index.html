@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación</title>
+    <link rel="stylesheet" href="style/normalize.css">
+    <style>
+        body {
+            background-color: #248297;
+            color: rgb(237, 231, 231);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }   
+        h1 {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        label {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        input, textarea {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1bb3d6;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0f4c75;
+        }
+
+        .button {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1bb3d6;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            display: block; 
+            border: #f1f4f5;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            font-size: 20px;
+            align-items: center;
+            padding: 10px;  
+            background-color: #105e6f;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: #f1f4f5;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generar Factura</h1>
+    <form action="{{ url_for('crear_factura') }}" method="post">
+
+        <label>Cliente:</label>
+    <input type="text" name="cliente" required>
+
+    <label>Artículo:</label>
+    <input type="text" name="articulo" required>
+
+    <label>Cantidad:</label>
+    <input type="number" name="cantidad" min="1" value="1" required> <!-- Nuevo campo -->
+
+    <label>Precio:</label>
+    <input type="number" step="0.01" name="precio" required>
+
+    <label>Notas:</label>
+    <textarea name="notas"></textarea><br>
+
+    <button type="submit">Crear Factura</button>
+    </form>
+
+    <h2>Facturas Registradas</h2>
+    <ul>
+        {% for factura in facturas %}
+            <li>
+                {{ factura.id }} {{ factura.cliente }} - {{ factura.articulo }} - ${{ factura.precio }}  
+                <a class="button" href="{{ url_for('ver_factura', id=factura.id) }} " target="_blank">Ver Detalles</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
