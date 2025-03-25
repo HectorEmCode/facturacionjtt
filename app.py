@@ -10,9 +10,12 @@ import secrets
 
 # Generate a secure secret key
 app = Flask(__name__)
-app.secret_key = 'c9c25ab02aad2b6496181312028bf533'  # Ensure this is unique and secure
+# app.secret_key = 'c9c25ab02aad2b6496181312028bf533'  # Ensure this is unique and secure
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///facturas.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "c9c25ab02aad2b6496181312028bf533")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///facturas.db")
 db = SQLAlchemy(app)
 
 
